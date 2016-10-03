@@ -1,201 +1,95 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace ArrayTest
 {
     class Program
     {
+        /// <summary>
+        /// Сложение двух многозначных чисел.
+        /// Заполнить массив случайными числами.
+        /// Напечатать массив (4 способа).
+        /// Полиморфизм.
+        /// </summary>
         static void Main(string[] args)
-        {
+        {   
             string a = Console.ReadLine();
             string b = Console.ReadLine();
-
-            char[] aArray = a.ToCharArray();
-            char[] bArray = b.ToCharArray();
-
-            if (aArray.Length > bArray.Length)
+            
+            byte[] aByte;
+            byte[] bByte;
+            aByte = new byte[a.Length];
+            for (int i = 0; i < a.Length; i++)
             {
-                int[] fArray = new int[aArray.Length];
-
-                for (int i = 0; i < bArray.Length / 2; i++)
-                {
-                    var p = bArray[i];
-                    bArray[i] = bArray[bArray.Length - 1 - i];
-                    bArray[bArray.Length - 1 - i] = p;
-                }
-
-                List<char> bArray3 = new List<char>(bArray);
-                var c = aArray.Length - bArray.Length;
-                for (int i = 0; i < c; i++)
-                {
-                    bArray3.Add('0');
-                }
-                char[] bArray2 =bArray3.ToArray();
-
-                for (int i = 0; i < bArray2.Length / 2; i++)
-                {
-                    var p = bArray2[i];
-                    bArray2[i] = bArray2[bArray2.Length - 1 - i];
-                    bArray2[bArray2.Length - 1 - i] = p;
-                }
-
-                var t = 0;
-                for (int i = fArray.Length - 1; i >= 0; i--)
-                {
-                    var aByte = byte.Parse(aArray[i].ToString());
-                    var bByte = byte.Parse(bArray2[i].ToString());
-                    var result = aByte + bByte + t;
-                    if (result <= 9)
-                    {
-                        t = 0;
-                        fArray[i] = result;
-                    }
-                    else if (i == 0)
-                    {
-                        t = 0;
-                        fArray[i] = result;
-                    }
-                    else if (result > 9)
-                    {
-                        t = 0;
-                        fArray[i] = result % 10;
-                        t++;
-                    }
-                }
-                Print(fArray);
+                aByte[a.Length - i - 1] = byte.Parse(a[i].ToString());
             }
-            else if (aArray.Length < bArray.Length)
+            bByte = new byte[b.Length];
+            for (int i = 0; i < b.Length; i++)
             {
-                int[] fArray = new int[bArray.Length];
-                for (int i = 0; i < aArray.Length/2; i++)
-                {
-                    var p = aArray[i];
-                    aArray[i] = aArray[aArray.Length - 1 - i];
-                    aArray[aArray.Length - 1 - i] = p;
-                }
+                bByte[b.Length - i - 1] = byte.Parse(b[i].ToString());
+            }
 
-                List<char> aArray3 = new List<char>(aArray);
-                var c = bArray.Length - aArray.Length;
-                for (int i = 0; i < c; i++)
-                {
-                    aArray3.Add('0');
-                }
-                char[] aArray2 = aArray3.ToArray();
-
-                for (int i = 0; i < aArray2.Length/2; i++)
-                {
-                    var p = aArray2[i];
-                    aArray2[i] = aArray2[aArray2.Length - 1 - i];
-                    aArray2[aArray2.Length - 1 - i] = p;
-                }
-
-                var t = 0;
-                for (int i = fArray.Length - 1; i >= 0; i--)
-                {
-                    var aByte = byte.Parse(aArray2[i].ToString());
-                    var bByte = byte.Parse(bArray[i].ToString());
-                    var result = aByte + bByte + t;
-                    if (result <= 9)
-                    {
-                        t = 0;
-                        fArray[i] = result;
-                    }
-                    else if (i == 0)
-                    {
-                        t = 0;
-                        fArray[i] = result;
-                    }
-                    else if (result > 9)
-                    {
-                        t = 0;
-                        fArray[i] = result % 10;
-                        t++;
-                    }
-                }
-                Print(fArray);
+            byte min = 0;
+            byte max = 0;
+            byte[] maxArray;
+            if (aByte.Length < bByte.Length)
+            {
+                min = (byte) aByte.Length;
+                max = (byte) bByte.Length;
+                maxArray = bByte;
             }
             else
             {
-                int[] fArray = new int[aArray.Length];
-                var t = 0;
-                for (int i = fArray.Length - 1; i >= 0; i--)
-                {
-                    var aByte = byte.Parse(aArray[i].ToString());
-                    var bByte = byte.Parse(bArray[i].ToString());
-                    var result = aByte + bByte + t;
-                    if (result <= 9)
-                    {
-                        t = 0;
-                        fArray[i] = result;
-                    }
-                    else if (i == 0)
-                    {
-                        t = 0;
-                        fArray[i] = result;
-                    }
-                    else if (result > 9)
-                    {
-                        t = 0;
-                        fArray[i] = result%10;
-                        t++;
-                    }
-                }
-                Print(fArray);
+                min = (byte) bByte.Length;
+                max = (byte) aByte.Length;
+                maxArray = aByte;
             }
             
-    
+            var c = new byte[max + 1];
+            
+            for (int i = 0; i < min; i++)
+            {
+                c[i] +=(byte)(aByte[i] + bByte[i]);
+                c[i + 1] = (byte) (c[i]/10);
+                c[i] = (byte)(c[i] % 10);
+            }
+            
+            for (int i = min; i < max; i++)
+            {
+                c[i] += maxArray[i];
+                
+                c[i+1] = (byte) (c[i]/10);
+                c[i] = (byte) (c[i]%10);
+            }
+            
+            for (int i = 0; i < c.Length / 2; i++)
+            {
+                var p = c[i];
+                c[i] = c[c.Length - 1 - i];
+                c[c.Length - 1 - i] = p;
+            }
 
-
-
-
-
-            //int n = int.Parse(Console.ReadLine());
-
-            //var a = new int[n];
-
-            //SetArray(a);
-            //Print(a);
-            //Console.WriteLine();
-
-            //for (int i = 0; i < n/2; i++)
-            //{
-            //    int b = a[i];
-            //    a[i] = a[n - 1 - i];
-            //    a[n - 1 - i] = b;
-            //}
-
-            //Print(a);
-
-            //int sum = 0;
-
-            //for (int i = 0; i < n; i++)
-            //{
-            //    if (i%2 == 1)
-            //        sum += a[i];
-            //}
-
-            //Console.WriteLine();
-            //Console.Write(sum);
-
+            Print(c.SkipWhile(el => el == 0).ToArray()); // Печатает все кроме нулей.
+            
             Console.ReadKey();
 
         }
 
-        
-        private static void SetArray(int[] a)
+
+        //private static void SetArray(int[] a)
+        //{
+        //    var r = new Random();
+
+        //    for (int i = 0; i < a.Length; i++)
+        //        a[i] = r.Next(10);
+
+        //}
+
+        static void Print(byte[] a)
         {
-            var r = new Random();
-
             for (int i = 0; i < a.Length; i++)
-                a[i] = r.Next(10);
-
-        }
-
-        static void Print(int[] a)
-        {
-            for (int i = 0; i < a.Length; i++)
-                Console.Write("{0} ", a[i]);
-
+                Console.Write("{0}", a[i]);
+            Console.WriteLine();
             //foreach (var item in a)
             //    Console.Write("{0} ", item);
 
